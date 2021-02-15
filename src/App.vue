@@ -1,28 +1,105 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app dark>
+    <v-navigation-drawer
+            v-model="drawer"
+            :mini-variant="miniVariant"
+            :clipped="clipped"
+            fixed
+            absolute
+            temporary
+            app
+    >
+      <v-list>
+        <v-list-item
+                v-for="(item, i) in items"
+                :key="i"
+                :to="item.to"
+                router
+                exact
+        >
+          <v-list-item-action>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title"/>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar
+            dark
+            dense
+            flat
+            :clipped-left="clipped"
+            fixed
+            color="primary"
+            app
+    >
+      <v-app-bar-nav-icon
+              class="hidden-md-and-up"
+              @click.stop="drawer = !drawer"/>
+      <v-toolbar-title>
+        <router-link class="cursor-pointer" to="/"><span class="white--text">{{title}}</span></router-link>
+      </v-toolbar-title>
+      <v-spacer class="hidden-sm-and-down"/>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <v-btn
+                v-for="(item, i) in items"
+                :key="i"
+                :to="item.to"
+                :title="item.title"
+                text
+                exact
+                router
+        >
+          <v-icon left>{{ item.icon }}</v-icon>
+          {{ item.title }}
+        </v-btn>
+      </v-toolbar-items>
+    </v-app-bar>
+    <v-main>
+      <v-container>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
+    <v-footer
+            :absolute="!fixed"
+            app
+    >
+      <span>&copy; {{ new Date().getFullYear() }}</span>
+    </v-footer>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  export default {
+    data() {
+      return {
+        clipped: false,
+        drawer: false,
+        fixed: false,
+        miniVariant: false,
+        title: 'DevMeetup'
+      }
+    },
+    computed: {
+      items() {
+        if(this.userIsAuthenticated){
+          return [
+            {icon: 'mdi-account-supervisor', title: 'View Meetups', to: '/meetups'},
+            {icon: 'mdi-google-classroom', title: 'Organize Meetups', to: '/meetup/new'},
+            {icon: 'mdi-account', title: 'Profile', to: '/profile'},
+          ]
+        } else {
+          return [
+            {icon: 'mdi-account-plus', title: 'Sign Up', to: '/signup'},
+            {icon: 'mdi-login', title: 'Sign In', to: '/signin'},
+          ]
+        }
+      },
+      userIsAuthenticated() {
+        return this.$store.getters.user !== null && this.$store.getters !== undefined
+      }
+    }
   }
-}
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
