@@ -39,6 +39,11 @@
                         </v-col>
                     </v-row>
                     <v-row>
+                        <v-col cols="12">
+                            <v-img :src="imageURL" height="100px"></v-img>
+                        </v-col>
+                    </v-row>
+                    <v-row>
                         <v-col
                                 cols="12"
                         >
@@ -115,11 +120,6 @@
                                         @click:minute="$refs.menu.save(time)"
                                 ></v-time-picker>
                             </v-menu>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-img :src="imageURL" height="100px"></v-img>
                         </v-col>
                     </v-row>
                     <v-row>

@@ -9,6 +9,17 @@
             </v-col>
         </v-row>
         <v-row>
+            <v-col class="text-center">
+                <v-progress-circular
+                        indeterminate
+                        color="primary"
+                        :width="7"
+                        :size="70"
+                        v-if="loading"
+                ></v-progress-circular>
+            </v-col>
+        </v-row>
+        <v-row v-if="!loading">
             <v-col>
                 <v-carousel
                         class="cursor-pointer"
@@ -29,7 +40,7 @@
                 </v-carousel>
             </v-col>
         </v-row>
-        <v-row row wrap class="mt-6">
+        <v-row row wrap class="mt-6" v-if="!loading">
             <v-col class="text-sm-center">
                 <p>Join our awesome meetups!</p>
             </v-col>
@@ -43,6 +54,9 @@
         computed: {
             meetups() {
                 return this.$store.getters.featuredMeetups
+            },
+            loading() {
+                return this.$store.getters.loading
             }
         },
         methods: {

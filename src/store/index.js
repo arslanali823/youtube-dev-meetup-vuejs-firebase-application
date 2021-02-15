@@ -1,52 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import {v4 as uuidv4} from 'uuid'
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
-        loadedMeetups: [
-            {
-                id: uuidv4(),
-                title: 'Meetup in New York',
-                imageUrl: 'https://www.befunky.com/images/prismic/8e6aa235-e32e-4e4a-a9fd-6e404778f9d6_features-stock-images.png?auto=webp&format=jpg&width=581',
-                date: new Date(),
-                location: 'New York',
-                description: 'Its New York'
-            },
-            {
-                id: uuidv4(),
-                title: 'Meetup in Islamabad',
-                imageUrl: 'https://www.w3schools.com/howto/img_nature_wide.jpg',
-                date: new Date(),
-                location: 'Islamabad',
-                description: 'Its Islamabad'
-            },
-            {
-                id: uuidv4(),
-                title: 'Meetup in Lahore',
-                imageUrl: 'https://www.johnryder.co.uk/wp-content/uploads/2014/08/sample-slider.jpg',
-                date: new Date(),
-                location: 'Lahore',
-                description: 'Its Lahore'
-            },
-            {
-                id: uuidv4(),
-                title: 'Meetup in Karachi',
-                imageUrl: 'https://www.gettyimages.com/gi-resources/images/500px/983794168.jpg',
-                date: new Date(),
-                location: 'Karachi',
-                description: 'Its Karachi'
-            }
-        ],
+        loadedMeetups: [],
         user: null,
         loading: false,
         error: null
     },
     mutations: {
+        setLoadedMeetups(state, payload) {
+            state.loadedMeetups = payload
+        },
         createMeetup(state, payload) {
             state.loadedMeetups.push(payload);
         },
@@ -64,24 +34,56 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
+        loadMeetups({commit}) {
+            commit('setLoading', true)
+            firebase.database().ref('meetups').once('value')
+                .then(data => {
+                    const meetups = []
+                    const obj = data.val()
+                    for( let key in obj) {
+                        meetups.push({
+                            id: key,
+                            title: obj[key].title,
+                            description: obj[key].description,
+                            imageUrl: obj[key].imageUrl,
+                            date: obj[key].date
+                        })
+                    }
+                    commit('setLoadedMeetups', meetups)
+                    commit('setLoading', false)
+                })
+                .catch(error => {
+                    console.log(error)
+                    commit('setLoading', false)
+                })
+        },
         createMeetup({commit}, payload) {
             const meetup = {
-                id: payload.id,
                 title: payload.title,
                 location: payload.title,
                 imageUrl: payload.imageUrl,
                 description: payload.description,
-                date: payload.date
+                date: payload.date.toLocaleString()
             }
 
-            // Reach out to firebase and store it
-            commit('createMeetup', meetup)
+            firebase.database().ref('meetups').push(meetup)
+                .then(data => {
+                    const key = data.key
+                    commit('createMeetup', {
+                        ...meetup,
+                        id: key
+                    })
+                })
+                .catch(error => {
+                    console.log(error)
+                })
         },
         signUserUp({commit}, payload) {
             commit('setLoading', true)
             firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then((userCredential) => {
                     commit('setLoading', false)
+                    commit('clearError')
                     let user = userCredential.user;
                     console.log(userCredential)
                     commit('setUser', {
@@ -121,13 +123,13 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
-        loadedMeetups(state){
+        loadedMeetups(state) {
             return state.loadedMeetups.sort((meetupA, meetupB) => {
                 return meetupA.date > meetupB.date
             })
         },
         featuredMeetups(state, getters) {
-            return getters.loadedMeetups.slice(0,5)
+            return getters.loadedMeetups.slice(0, 5)
         },
         loadedMeetup(state) {
             return (meetupId) => {

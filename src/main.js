@@ -21,7 +21,7 @@ const projectId = 'devmeetup-b2e73';
 const firebaseConfig = {
   apiKey: 'AIzaSyCWfQGAFu5MKl59RWoBcHRuHHE9KkbAP5M',
   authDomain: `${projectId}.firebaseapp.com`,
-  databaseURL: `https://${projectId}.firebaseio.com`,
+  databaseURL: 'https://devmeetup-b2e73-default-rtdb.firebaseio.com/',
   projectId: projectId,
   storageBucket: `${projectId}.appspot.com`,
 }
@@ -34,5 +34,6 @@ new Vue({
   created() {
     //initialize firebase
     firebase.initializeApp(firebaseConfig)
+    this.$store.dispatch('loadMeetups')
   }
 }).$mount('#app')
