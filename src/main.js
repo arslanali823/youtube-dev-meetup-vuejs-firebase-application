@@ -23,7 +23,7 @@ const firebaseConfig = {
   authDomain: `${projectId}.firebaseapp.com`,
   databaseURL: 'https://devmeetup-b2e73-default-rtdb.firebaseio.com/',
   projectId: projectId,
-  storageBucket: `${projectId}.appspot.com`,
+  storageBucket: 'gs://devmeetup-b2e73.appspot.com/',
 }
 
 new Vue({

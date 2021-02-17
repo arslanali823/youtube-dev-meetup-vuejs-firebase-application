@@ -30,17 +30,18 @@
                     </v-row>
                     <v-row>
                         <v-col cols="12">
-                            <v-text-field
-                                    name="imageUrl"
-                                    label="imageUrl"
-                                    id="imageUrl"
-                                    v-model="imageURL"
-                                    :rules="[rules.required]"></v-text-field>
+                            <v-btn raised class="primary rounded-0 mr-2" @click="onPickFile">Upload Image</v-btn>
+                            <input
+                                    type="file"
+                                    class="d-none"
+                                    ref="fileInput"
+                                    accept="image/*"
+                            @change="onFilePicked">
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12">
-                            <v-img :src="imageURL" height="100px"></v-img>
+                            <v-img :src="imageUrl" height="100px"></v-img>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -163,14 +164,15 @@
         name: "CreateMeetup",
         data: () => {
             return {
-                date: new Date().toISOString().substr(0, 10),
-                time: new Date().getUTCHours() + ':' + new Date().getUTCMinutes(),
                 menu2: false,
                 modal: false,
                 title: '',
                 location: '',
-                imageURL: '',
+                imageUrl: '',
+                image: null,
                 description: '',
+                date: new Date().toISOString().substr(0, 10),
+                time: new Date().getUTCHours() + ':' + new Date().getUTCMinutes(),
                 valid: false,
                 rules: {
                     required: value => !!value || 'Required.',
@@ -199,13 +201,16 @@
         methods: {
             onCreateMeetup() {
                 if (!this.$refs.form.validate()) {
-                    return false;
+                    return false
+                }
+                if(!this.image){
+                    return false
                 }
                 const meetupData = {
                     id: uuidv4(),
                     title: this.title,
                     location: this.location,
-                    imageUrl: this.imageURL,
+                    imageUrl: this.image,
                     description: this.description,
                     date: this.submittableDateTime
                 }
@@ -215,9 +220,22 @@
             reset() {
                 this.$refs.form.reset()
             },
-            resetValidation() {
-                this.$refs.form.resetValidation()
+            onPickFile() {
+                this.$refs.fileInput.click()
             },
+            onFilePicked(event) {
+                const file = event.target.files[0]
+                let filename = file.name
+                if(filename.lastIndexOf('.') <= 0) {
+                    return alert('Please add valid file')
+                }
+                const fileReader = new FileReader()
+                fileReader.onload = (e) => {
+                    this.imageUrl = e.target.result
+                }
+                fileReader.readAsDataURL(file)
+                this.image = file
+            }
         }
     }
 </script>

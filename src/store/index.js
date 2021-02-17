@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import "firebase/storage";
 
 Vue.use(Vuex)
 
@@ -40,7 +41,7 @@ export const store = new Vuex.Store({
                 .then(data => {
                     const meetups = []
                     const obj = data.val()
-                    for( let key in obj) {
+                    for (let key in obj) {
                         meetups.push({
                             id: key,
                             title: obj[key].title,
@@ -59,22 +60,40 @@ export const store = new Vuex.Store({
                 })
         },
         createMeetup({commit}, payload) {
+            console.log(payload)
             const meetup = {
                 title: payload.title,
                 location: payload.title,
-                imageUrl: payload.imageUrl,
                 description: payload.description,
                 date: payload.date.toLocaleString(),
                 creatorId: this.getters.user.id
             }
-
+            let imageUrl
+            let key
             firebase.database().ref('meetups').push(meetup)
                 .then(data => {
-                    const key = data.key
-                    commit('createMeetup', {
-                        ...meetup,
-                        id: key
-                    })
+                    key = data.key
+                    return key
+                })
+                .then(key => {
+                    // const filename = payload.imageUrl.name
+                    // const ext = filename.slice(filename.lastIndexOf('.'))
+                    return firebase.storage().ref('meetups/' + key).put(payload.imageUrl);
+
+                })
+                .then((fileData) => {
+                    fileData.ref.getDownloadURL()
+                        .then((downloadUrl) => {
+                            imageUrl = downloadUrl
+                            firebase.database().ref('meetups').child(key).update({imageUrl: imageUrl})
+                        })
+                        .then(() => {
+                            commit('createMeetup', {
+                                ...meetup,
+                                imageUrl: imageUrl,
+                                id: key
+                            })
+                        })
                 })
                 .catch(error => {
                     console.log(error)
