@@ -4,7 +4,9 @@ import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import '../src/assets/css/custom.css'
+
 import AlertComponent from './components/Shared/Alert'
+import EditMeetup from "./components/Meetup/Edit/EditMeetup";
 
 import router from './router'
 import {store} from './store'
@@ -16,6 +18,7 @@ Vue.config.productionTip = false
 
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertComponent)
+Vue.component('app-edit-meetup', EditMeetup)
 
 const projectId = 'devmeetup-b2e73';
 const firebaseConfig = {
