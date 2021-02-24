@@ -15,6 +15,7 @@ import firebase from "firebase/app"
 
 import DateFilter from './filters/date'
 import EditMeetupTimeDialog from "./components/Meetup/Edit/EditMeetupTimeDialog";
+import RegisterDialog from "./components/Meetup/Registration/RegisterDialog";
 
 Vue.config.productionTip = false
 
@@ -23,6 +24,7 @@ Vue.component('app-alert', AlertComponent)
 Vue.component('app-edit-meetup', EditMeetup)
 Vue.component('app-edit-meetup-date', EditMeetupDateDialog)
 Vue.component('app-edit-meetup-time', EditMeetupTimeDialog)
+Vue.component('app-register-meetup', RegisterDialog)
 
 const projectId = 'devmeetup-b2e73';
 const firebaseConfig = {

@@ -35,12 +35,7 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn
-                                dark
-                                color="primary"
-                                class="rounded-0">
-                            Register
-                        </v-btn>
+                        <app-register-meetup :meetupId="meetup.id"></app-register-meetup>
                     </v-card-actions>
                 </v-card>
             </v-col>
