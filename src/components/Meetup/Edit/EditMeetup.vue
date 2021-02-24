@@ -55,7 +55,7 @@
                         <v-row>
                             <v-col class="text-right">
                                 <v-btn
-                                        class="mr-2"
+                                        class="mr-2 rounded-0"
                                         color="default"
                                         dark
                                         @click="dialog.value = false"
@@ -66,7 +66,7 @@
                                         dark
                                         color="primary"
                                         @click="onSaveChanges"
-                                        class="mr-1"
+                                        class="mr-1 rounded-0"
                                 >
                                     Save
                                 </v-btn>

@@ -188,11 +188,9 @@
             submittableDateTime() {
                 let date = new Date(this.date)
                 if (typeof this.time === 'string') {
-                    date.setHours(this.time.match(/^(\d+)/)[1])
-                    date.setMinutes(this.time.match(/:(\d+)/)[1])
+                    date.setHours(this.time.match(/^(\d+)/)[1]).setMinutes(this.time.match(/:(\d+)/)[1])
                 } else {
-                    date.setHours(this.time.getUTCHours())
-                    date.setMinutes(this.time.getUTCMinutes())
+                    date.setHours(this.time.getUTCHours()).setMinutes(this.time.getUTCMinutes())
                 }
                 console.log(date)
                 return date;

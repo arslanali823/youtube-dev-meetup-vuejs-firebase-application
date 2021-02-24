@@ -7,18 +7,22 @@ import '../src/assets/css/custom.css'
 
 import AlertComponent from './components/Shared/Alert'
 import EditMeetup from "./components/Meetup/Edit/EditMeetup";
+import EditMeetupDateDialog from "./components/Meetup/Edit/EditMeetupDateDialog";
 
 import router from './router'
 import {store} from './store'
 import firebase from "firebase/app"
 
 import DateFilter from './filters/date'
+import EditMeetupTimeDialog from "./components/Meetup/Edit/EditMeetupTimeDialog";
 
 Vue.config.productionTip = false
 
 Vue.filter('date', DateFilter)
 Vue.component('app-alert', AlertComponent)
 Vue.component('app-edit-meetup', EditMeetup)
+Vue.component('app-edit-meetup-date', EditMeetupDateDialog)
+Vue.component('app-edit-meetup-time', EditMeetupTimeDialog)
 
 const projectId = 'devmeetup-b2e73';
 const firebaseConfig = {

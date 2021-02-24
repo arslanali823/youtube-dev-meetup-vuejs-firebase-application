@@ -26,12 +26,19 @@
                             :src="meetup.imageUrl"
                     ></v-img>
                     <v-card-subtitle class="blue--text">{{ meetup.date | date }} - {{ meetup.location }}</v-card-subtitle>
+                    <div>
+                        <app-edit-meetup-date v-if="userIsCreator" :meetup="meetup"></app-edit-meetup-date>
+                        <app-edit-meetup-time v-if="userIsCreator" :meetup="meetup"></app-edit-meetup-time>
+                    </div>
                     <v-card-text>
                         {{ meetup.description }}
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn class="primary">
+                        <v-btn
+                                dark
+                                color="primary"
+                                class="rounded-0">
                             Register
                         </v-btn>
                     </v-card-actions>
